@@ -1,3 +1,5 @@
+package Tasks;
+
 public class Task {
     private Integer id;
     private String name;
@@ -38,7 +40,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
+        return "Tasks.Task{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
