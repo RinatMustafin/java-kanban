@@ -25,9 +25,9 @@ public class TaskManager {
 
     public Task updateTask(Task task) {
         if (tasks.containsKey(task.getId())) {
-            Task task1 = tasks.get(task.getId());
-            task1.setName(task.getName());
-            task1.setDescription(task.getDescription());
+            Task taskNew = tasks.get(task.getId());
+            taskNew.setName(task.getName());
+            taskNew.setDescription(task.getDescription());
         }
         return task;
     }
@@ -104,7 +104,7 @@ public class TaskManager {
             subtasks.put(subtask.getId(), subtask);
             makeEpicStatus(epics.get(subtask.getEpicId()));
         } else {
-            System.out.println("Такого эпика нет, введите новый эпик");
+            System.out.println("Такого эпика нет, " + epicId + "введите новый эпик");
         }
 
         return subtask;
