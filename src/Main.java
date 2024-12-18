@@ -1,3 +1,6 @@
+import manager.InMemoryHistoryManager;
+import manager.InMemoryTaskManager;
+import manager.Managers;
 import tasks.Epic;
 import tasks.Status;
 import tasks.Subtask;
@@ -7,9 +10,12 @@ import manager.TaskManager;
 public class Main {
 
     public static void main(String[] args) {
-        TaskManager taskManager = new TaskManager();
+        TaskManager taskManager = Managers.getDefault();
         Task task1 = new Task(null, "Уборка", "Сделать уборку всех комнат", Status.NEW);
         Task task2 = new Task(null, "Написание", "Написать книгу", Status.NEW);
+        taskManager.createTask(task1);
+        taskManager.createTask(task2);
+
         task1.setName("Уборка всей комнаты");
         taskManager.updateTask(task1);
         taskManager.deleteTaskById(-1);
@@ -21,7 +27,7 @@ public class Main {
         taskManager.createSubtask(subtask2);
         Epic epic2 = new Epic(null, "Бег", "Круг"); // 4
         taskManager.createEpic(epic2);
-        Subtask subtask3 = new Subtask(null, "Медленный бег", "Круг 1", epic2.getId(), Status.IN_PROGRESS);
+        Subtask subtask3 = new Subtask(null, "Медленный бег", "Круг 1", 8, Status.IN_PROGRESS);
         taskManager.createSubtask(subtask3);
 
         System.out.println(task1);
