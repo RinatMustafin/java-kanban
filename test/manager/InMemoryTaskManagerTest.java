@@ -133,7 +133,7 @@ class InMemoryTaskManagerTest {
         taskManager.createEpic(epic1);
         taskManager.createEpic(epic2);
         taskManager.deleteEpicById(epic2.getId());
-        String expected = String.format( "[Tasks.Task{id=1, name='%s', description='%s', status=NEW}]" , name, description);
+        String expected = String.format( "[Tasks.Epic{subtaskIds=[]} Tasks.Task{id=1, name='%s', description='%s', status=NEW}]" , name, description);
         String actually = taskManager.getAllEpics().toString();
 
         assertEquals(expected, actually);
