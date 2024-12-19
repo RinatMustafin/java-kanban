@@ -65,7 +65,7 @@ class InMemoryTaskManagerTest {
         taskManager.createTask(task1);
         taskManager.createTask(task2);
         taskManager.deleteTaskById(task2.getId());
-        String expected = "[Tasks.Task{id=1, name='Написать тесты', description='Сделать ТЗ', status=NEW}]";
+        String expected = String.format( "[Tasks.Task{id=1, name='%s', description='%s', status=NEW}]" , name, description);
         String actually = taskManager.getAllTasks().toString();
 
         assertEquals(expected, actually);
@@ -78,7 +78,7 @@ class InMemoryTaskManagerTest {
         Task task1 = new Task(null, name , description, Status.NEW);
         taskManager.createTask(task1);
         taskManager.getAllTasks();
-        String expected = "[Tasks.Task{id=1, name='Написать тесты', description='Сделать ТЗ', status=NEW}]";
+        String expected =String.format( "[Tasks.Task{id=1, name='%s', description='%s', status=NEW}]" , name, description);
         String actually = taskManager.getAllTasks().toString();
         assertEquals(expected, actually);
     }
@@ -133,7 +133,7 @@ class InMemoryTaskManagerTest {
         taskManager.createEpic(epic1);
         taskManager.createEpic(epic2);
         taskManager.deleteEpicById(epic2.getId());
-        String expected = "[Tasks.Epic{subtaskIds=[]} Tasks.Task{id=1, name='Написать тесты', description='Сделать ТЗ', status=NEW}]";
+        String expected = String.format( "[Tasks.Task{id=1, name='%s', description='%s', status=NEW}]" , name, description);
         String actually = taskManager.getAllEpics().toString();
 
         assertEquals(expected, actually);
@@ -147,7 +147,7 @@ class InMemoryTaskManagerTest {
 
         taskManager.createEpic(epic);
 
-        String expected = "[Tasks.Epic{subtaskIds=[]} Tasks.Task{id=1, name='Приготовить ужин', description='Порезать картошку', status=NEW}]";
+        String expected = String.format( "[Tasks.Task{id=1, name='%s', description='%s', status=NEW}]" , name, description);
         String actually = taskManager.getAllEpics().toString();
     }
 
