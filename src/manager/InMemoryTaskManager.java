@@ -14,7 +14,7 @@ public class InMemoryTaskManager implements TaskManager {
     private HashMap<Integer, Epic> epics = new HashMap<>();
     private HashMap<Integer, Subtask> subtasks = new HashMap<>();
     private int counter = 0;
-private HistoryManager historyManager;
+    private HistoryManager historyManager;
 
     public InMemoryTaskManager(HistoryManager historyManager) {
         this.historyManager = historyManager;
@@ -67,7 +67,6 @@ private HistoryManager historyManager;
     public ArrayList<Task> getHistory() {
         return new ArrayList<>(historyManager.getHistory());
     }
-
 
 
     private int nextId() {
@@ -186,8 +185,6 @@ private HistoryManager historyManager;
         }
         return resultOfSubtasks;
     }
-
-
 
 
     private void makeEpicStatus(Epic epic) {
