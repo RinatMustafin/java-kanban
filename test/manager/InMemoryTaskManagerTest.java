@@ -42,9 +42,9 @@ class InMemoryTaskManagerTest {
         Task task = new Task(null, name, description, Status.NEW);
 
         taskManager.createTask(task);
-
+        assertNotNull(task.getId(), "Task ID не должен быть null");
         Task taskStatus = taskManager.findTaskById(task.getId());
-
+        assertNotNull(taskStatus, "Task не должен быть null");
         taskStatus.setStatus(Status.DONE);
         taskManager.updateTask(taskStatus);
 
