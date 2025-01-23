@@ -11,12 +11,12 @@ public class InMemoryHistoryManager implements HistoryManager {
     private static class Node {
         Task value;
         Node next;
-        Node previous;
+        Node prev;
 
         public Node(Task value, Node next, Node previous) {
             this.value = value;
             this.next = next;
-            this.previous = previous;
+            this.prev = previous;
         }
     }
 
