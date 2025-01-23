@@ -1,7 +1,8 @@
 package tasks;
 
-public class Subtask extends Task{
+public class Subtask extends Task {
     int epicId;
+
     public Subtask(Integer id, String name, String description, int epicId, Status status) {
         super(id, name, description, status);
         this.epicId = epicId;
