@@ -28,8 +28,6 @@ public class InMemoryHistoryManager implements HistoryManager {
     Node first;
     Node last;
 
-//   private ArrayList<Task> history = new ArrayList<>();
-
 
     @Override
     public void addToHistory(Task task) {
@@ -48,7 +46,6 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
         return history;
 
-        // return List.copyOf(history);
     }
 
     @Override
