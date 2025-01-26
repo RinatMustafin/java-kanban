@@ -24,7 +24,7 @@ class InMemoryTaskManagerTest {
     void createTask() {
         String name = "Написать тесты";
         String description = "Сделать ТЗ";
-        Task task = new Task(null, name , description, Status.NEW);
+        Task task = new Task(null, name, description, Status.NEW);
 
         taskManager.createTask(task);
 
@@ -39,7 +39,7 @@ class InMemoryTaskManagerTest {
     void updateTask() {
         String name = "Написать тесты";
         String description = "Сделать ТЗ";
-        Task task = new Task(null, name , description, Status.NEW);
+        Task task = new Task(null, name, description, Status.NEW);
 
         taskManager.createTask(task);
 
@@ -56,16 +56,16 @@ class InMemoryTaskManagerTest {
     void deleteTaskById() {
         String name = "Написать тесты";
         String description = "Сделать ТЗ";
-        Task task1 = new Task(null, name , description, Status.NEW);
+        Task task1 = new Task(null, name, description, Status.NEW);
         String name2 = "Написать книгу";
         String description2 = "Сделать чернила";
-        Task task2 = new Task(null, name2 , description2, Status.NEW);
+        Task task2 = new Task(null, name2, description2, Status.NEW);
 
 
         taskManager.createTask(task1);
         taskManager.createTask(task2);
         taskManager.deleteTaskById(task2.getId());
-        String expected = String.format( "[Tasks.Task{id=1, name='%s', description='%s', status=NEW}]" , name, description);
+        String expected = String.format("[Tasks.Task{id=1, name='%s', description='%s', status=NEW}]", name, description);
         String actually = taskManager.getAllTasks().toString();
 
         assertEquals(expected, actually);
@@ -75,10 +75,10 @@ class InMemoryTaskManagerTest {
     void getAllTasks() {
         String name = "Написать тесты";
         String description = "Сделать ТЗ";
-        Task task1 = new Task(null, name , description, Status.NEW);
+        Task task1 = new Task(null, name, description, Status.NEW);
         taskManager.createTask(task1);
         taskManager.getAllTasks();
-        String expected =String.format( "[Tasks.Task{id=1, name='%s', description='%s', status=NEW}]" , name, description);
+        String expected = String.format("[Tasks.Task{id=1, name='%s', description='%s', status=NEW}]", name, description);
         String actually = taskManager.getAllTasks().toString();
         assertEquals(expected, actually);
     }
@@ -87,7 +87,7 @@ class InMemoryTaskManagerTest {
     void deleteAllTasks() {
         String name = "Написать тесты";
         String description = "Сделать ТЗ";
-        Task task1 = new Task(null, name , description, Status.NEW);
+        Task task1 = new Task(null, name, description, Status.NEW);
         taskManager.createTask(task1);
         taskManager.deleteAllTasks();
         assertTrue(taskManager.getAllTasks().isEmpty());
@@ -98,7 +98,7 @@ class InMemoryTaskManagerTest {
     void createEpic() {
         String name = "Приготовить ужин";
         String description = "Порезать картошку";
-        Epic epic = new Epic (null, name , description);
+        Epic epic = new Epic(null, name, description);
 
         taskManager.createTask(epic);
 
@@ -112,7 +112,7 @@ class InMemoryTaskManagerTest {
     void updateEpic() {
         String name = "Приготовить ужин";
         String description = "Порезать картошку";
-        Epic epic = new Epic (null, name , description);
+        Epic epic = new Epic(null, name, description);
 
         taskManager.createEpic(epic);
         epic.setName("Завтрак");
@@ -124,16 +124,16 @@ class InMemoryTaskManagerTest {
     void deleteEpicById() {
         String name = "Написать тесты";
         String description = "Сделать ТЗ";
-        Epic epic1 = new Epic (null, name , description);
+        Epic epic1 = new Epic(null, name, description);
         String name2 = "Написать книгу";
         String description2 = "Сделать чернила";
-        Epic epic2 = new Epic (null, name2 , description2);
+        Epic epic2 = new Epic(null, name2, description2);
 
 
         taskManager.createEpic(epic1);
         taskManager.createEpic(epic2);
         taskManager.deleteEpicById(epic2.getId());
-        String expected = String.format( "[Tasks.Epic{subtaskIds=[]} Tasks.Task{id=1, name='%s', description='%s', status=NEW}]" , name, description);
+        String expected = String.format("[Tasks.Epic{subtaskIds=[]} Tasks.Task{id=1, name='%s', description='%s', status=NEW}]", name, description);
         String actually = taskManager.getAllEpics().toString();
 
         assertEquals(expected, actually);
@@ -143,11 +143,11 @@ class InMemoryTaskManagerTest {
     void getAllEpics() {
         String name = "Приготовить ужин";
         String description = "Порезать картошку";
-        Epic epic = new Epic (null, name , description);
+        Epic epic = new Epic(null, name, description);
 
         taskManager.createEpic(epic);
 
-        String expected = String.format( "[Tasks.Task{id=1, name='%s', description='%s', status=NEW}]" , name, description);
+        String expected = String.format("[Tasks.Task{id=1, name='%s', description='%s', status=NEW}]", name, description);
         String actually = taskManager.getAllEpics().toString();
     }
 
@@ -155,7 +155,7 @@ class InMemoryTaskManagerTest {
     void deleteAllEpics() {
         String name = "Приготовить ужин";
         String description = "Порезать картошку";
-        Epic epic = new Epic (null, name , description);
+        Epic epic = new Epic(null, name, description);
 
         taskManager.createEpic(epic);
         taskManager.deleteAllEpics();
@@ -163,12 +163,11 @@ class InMemoryTaskManagerTest {
     }
 
 
-
     @Test
     void taskInHistoryListShouldNotBeUpdatedAfterTaskUpdate() {
         String name = "Написать тесты";
         String description = "Сделать ТЗ";
-        Task task = new Task(null, name , description, Status.NEW);
+        Task task = new Task(null, name, description, Status.NEW);
 
         taskManager.createTask(task);
 
