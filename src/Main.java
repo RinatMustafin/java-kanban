@@ -1,3 +1,4 @@
+import manager.FileBackedTaskManager;
 import manager.Managers;
 import tasks.Epic;
 import tasks.Status;
@@ -5,10 +6,21 @@ import tasks.Subtask;
 import tasks.Task;
 import manager.TaskManager;
 
+import java.io.File;
+
 public class Main {
 
     public static void main(String[] args) {
-        TaskManager taskManager = Managers.getDefault();
+        File file = new File("data.csv");
+        TaskManager taskManager = Managers.getFileBackedTaskManager(file);
+
+        File backup = new File("backup.csv");
+        FileBackedTaskManager restoredTaskManager = FileBackedTaskManager.loadFromFile(backup);
+
+        System.out.println("Количество загруженных задач: " + restoredTaskManager.getTasks().size());
+        System.out.println("Количество загруженных подзадач: " + restoredTaskManager.getSubtasks().size());
+        System.out.println("Количество загруженных эпиков: " + restoredTaskManager.getEpics().size());
+
         Task task1 = new Task(null, "Уборка", "Сделать уборку всех комнат", Status.NEW);
         Task task2 = new Task(null, "Написание", "Написать книгу", Status.NEW);
         taskManager.createTask(task1);
@@ -25,7 +37,7 @@ public class Main {
         taskManager.createSubtask(subtask2);
         Epic epic2 = new Epic(null, "Бег", "Круг"); // 4
         taskManager.createEpic(epic2);
-        Subtask subtask3 = new Subtask(null, "Медленный бег", "Круг 1", 8, Status.IN_PROGRESS);
+        Subtask subtask3 = new Subtask(null, "Медленный бег", "Круг 1", epic2.getId(), Status.IN_PROGRESS);
         taskManager.createSubtask(subtask3);
 
         System.out.println(task1);

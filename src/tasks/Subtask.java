@@ -22,4 +22,11 @@ public class Subtask extends Task {
                 "epicId=" + epicId +
                 "} " + super.toString();
     }
+
+    @Override
+    public TaskType getType() {
+        return TaskType.SUBTASK;
+    }
+
+
 }
