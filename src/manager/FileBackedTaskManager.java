@@ -39,7 +39,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         try (FileWriter fr = new FileWriter(data)) {
             fr.write("id,type,name,status,description,epic" + System.lineSeparator());
         } catch (IOException e) {
-            String errorMessage = "Ошибка при сохранении в файл" + e.getMessage();
+            String errorMessage = String.format("Ошибка при сохранении в файл %s", e.getMessage());
             System.out.println(errorMessage);
             throw new FileManagerSaveException(errorMessage);
         }
