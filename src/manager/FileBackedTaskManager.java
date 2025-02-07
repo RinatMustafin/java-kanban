@@ -45,7 +45,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
         for (Task task : tasks.values()) {
             String taskAsString = taskToString(task);
-            System.out.println("Записываем в файл: " + taskAsString);
+            System.out.println(String.format("Записываем в файл: %s", taskAsString));
             writeStringToFile(taskAsString);
         }
     }
@@ -54,7 +54,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         try (FileWriter fr = new FileWriter(data, true)) {
             fr.write(taskAsString + System.lineSeparator());
         } catch (IOException e) {
-            String errorMessage = "Ошибка при сохранении в файл" + e.getMessage();
+            String errorMessage = String.format("Ошибка при сохранении в файл %s", e.getMessage());
             System.out.println(errorMessage);
             throw new FileManagerSaveException(errorMessage);
         }
@@ -120,7 +120,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             }
             return fileBackedTaskManager;
         } catch (IOException e) {
-            String errorMessage = "Ошибка при сохранении в файл" + e.getMessage();
+            String errorMessage = String.format("Ошибка при сохранении в файл %s", e.getMessage());
             System.out.println(errorMessage);
             throw new FileManagerFileInitializationException(errorMessage);
         }
@@ -216,7 +216,7 @@ private static Status getTaskStatus(String line) {
         case "NEW" -> Status.NEW;
         case "IN_PROGRESS" -> Status.IN_PROGRESS;
         case "DONE" -> Status.DONE;
-        default -> throw new IllegalStateException("Неизвестное значение: " + line);
+        default -> throw new IllegalStateException(String.format("Неизвестное значение: %s", line));
     };
 }
     }
