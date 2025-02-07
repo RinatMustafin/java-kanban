@@ -1,0 +1,8 @@
+id,type,name,status,description,epic
+1,TASK,Уборка всей комнаты,NEW,Сделать уборку всех комнат,
+2,TASK,Написание,NEW,Написать книгу,
+3,EPIC,Чтение,DONE,Книги 2,3
+4,SUBTASK,Чтение первой книги,DONE,Книга 1,3
+5,SUBTASK,Чтение второй книги,DONE,Книга 2,3
+6,EPIC,Бег,IN_PROGRESS,Круг,6
+7,SUBTASK,Медленный бег,IN_PROGRESS,Круг 1,6
