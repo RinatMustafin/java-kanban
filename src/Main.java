@@ -7,6 +7,10 @@ import tasks.Task;
 import manager.TaskManager;
 
 import java.io.File;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class Main {
 
@@ -21,8 +25,8 @@ public class Main {
         System.out.println("Количество загруженных подзадач: " + restoredTaskManager.getSubtasks().size());
         System.out.println("Количество загруженных эпиков: " + restoredTaskManager.getEpics().size());
 
-        Task task1 = new Task(null, "Уборка", "Сделать уборку всех комнат", Status.NEW);
-        Task task2 = new Task(null, "Написание", "Написать книгу", Status.NEW);
+        Task task1 = new Task(null, "Уборка", "Сделать уборку всех комнат", Status.NEW, Duration.ofMinutes(10), LocalDateTime.of(LocalDate.now(), LocalTime.now()));
+        Task task2 = new Task(null, "Написание", "Написать книгу", Status.NEW, Duration.ofMinutes(15), LocalDateTime.of(LocalDate.now(), LocalTime.now().plus(Duration.ofMinutes(15))));
         taskManager.createTask(task1);
         taskManager.createTask(task2);
 
@@ -31,13 +35,13 @@ public class Main {
         taskManager.deleteTaskById(-1);
         Epic epic1 = new Epic(null, "Чтение", "Книги 2");
         taskManager.createEpic(epic1);
-        Subtask subtask1 = new Subtask(null, "Чтение первой книги", "Книга 1", epic1.getId(), Status.DONE);
+        Subtask subtask1 = new Subtask(null, "Чтение первой книги", "Книга 1", epic1.getId(), Status.DONE, Duration.ofMinutes(15), LocalDateTime.of(LocalDate.now(), LocalTime.now().plus(Duration.ofMinutes(30))));
         taskManager.createSubtask(subtask1);
-        Subtask subtask2 = new Subtask(null, "Чтение второй книги", "Книга 2", epic1.getId(), Status.DONE);
+        Subtask subtask2 = new Subtask(null, "Чтение второй книги", "Книга 2", epic1.getId(), Status.DONE, Duration.ofMinutes(15), LocalDateTime.of(LocalDate.now(), LocalTime.now().plus(Duration.ofMinutes(45))));
         taskManager.createSubtask(subtask2);
         Epic epic2 = new Epic(null, "Бег", "Круг"); // 4
         taskManager.createEpic(epic2);
-        Subtask subtask3 = new Subtask(null, "Медленный бег", "Круг 1", epic2.getId(), Status.IN_PROGRESS);
+        Subtask subtask3 = new Subtask(null, "Медленный бег", "Круг 1", epic2.getId(), Status.IN_PROGRESS, Duration.ofMinutes(15), LocalDateTime.of(LocalDate.now(), LocalTime.now().plus(Duration.ofMinutes(60))));
         taskManager.createSubtask(subtask3);
 
         System.out.println(task1);

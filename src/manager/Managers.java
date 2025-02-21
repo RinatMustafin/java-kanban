@@ -4,7 +4,6 @@ import java.io.File;
 
 public class Managers {
     public static TaskManager getDefault() {
-      //  HistoryManager historyManager = getDefaultHistory();
         return new InMemoryTaskManager();
     }
 

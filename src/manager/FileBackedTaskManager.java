@@ -8,6 +8,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -33,11 +36,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return subtasks;
     }
 
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     private void save() {
         Collection<Task> values = tasks.values();
         try (FileWriter fr = new FileWriter(data)) {
-            fr.write("id,type,name,status,description,epic" + System.lineSeparator());
+            fr.write("id,type,name,status,description,epic,duration,time" + System.lineSeparator());
         } catch (IOException e) {
             String errorMessage = String.format("Ошибка при сохранении в файл %s", e.getMessage());
             System.out.println(errorMessage);
@@ -69,14 +73,14 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             Epic epic = (Epic) task;
             result += epic.getId();
         }
+        result += "," + task.getDuration().toMinutes() + "," + task.getStartTime().format(formatter);
         return result;
     }
 
     public static FileBackedTaskManager loadFromFile(File file) {
         FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         try {
-
-
             List<String> allLines = Files.readAllLines(file.toPath());
             if (allLines.isEmpty()) {
                 return fileBackedTaskManager;
@@ -93,7 +97,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                                 Integer.parseInt(lines[0]),
                                 lines[2],
                                 lines[4],
-                                getTaskStatus(lines[3])
+                                getTaskStatus(lines[3]),
+                                Duration.ofMinutes(Long.parseLong(lines[6])),
+                                LocalDateTime.parse(lines[7], formatter)
                         );
                         fileBackedTaskManager.tasks.put(task.getId(), task);
                         break;
@@ -103,7 +109,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                                 lines[2],
                                 lines[4],
                                 Integer.parseInt(lines[5]),
-                                getTaskStatus(lines[3])
+                                getTaskStatus(lines[3]),
+                                Duration.ofMinutes(Long.parseLong(lines[6])),
+                                LocalDateTime.parse(lines[7], formatter)
                         );
                         fileBackedTaskManager.subtasks.put(task.getId(), (Subtask) task);
                         break;
@@ -111,7 +119,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                         task = new Epic(
                                 Integer.parseInt(lines[0]), // id
                                 lines[2], // name
-                                lines[4]  // description
+                                lines[4],
+                                Duration.ofMinutes(Long.parseLong(lines[6])),
+                                LocalDateTime.parse(lines[7], formatter)// description
                         );
                         fileBackedTaskManager.epics.put(task.getId(), (Epic) task);
                         break;
@@ -211,13 +221,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
 
-private static Status getTaskStatus(String line) {
-    return switch (line) {
-        case "NEW" -> Status.NEW;
-        case "IN_PROGRESS" -> Status.IN_PROGRESS;
-        case "DONE" -> Status.DONE;
-        default -> throw new IllegalStateException(String.format("Неизвестное значение: %s", line));
-    };
-}
+    private static Status getTaskStatus(String line) {
+        return switch (line) {
+            case "NEW" -> Status.NEW;
+            case "IN_PROGRESS" -> Status.IN_PROGRESS;
+            case "DONE" -> Status.DONE;
+            default -> throw new IllegalStateException(String.format("Неизвестное значение: %s", line));
+        };
     }
+}
 
