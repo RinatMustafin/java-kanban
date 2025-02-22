@@ -21,9 +21,9 @@ public class Main {
         File backup = new File("backup.csv");
         FileBackedTaskManager restoredTaskManager = FileBackedTaskManager.loadFromFile(backup);
 
-        System.out.println("Количество загруженных задач: " + restoredTaskManager.getTasks().size());
-        System.out.println("Количество загруженных подзадач: " + restoredTaskManager.getSubtasks().size());
-        System.out.println("Количество загруженных эпиков: " + restoredTaskManager.getEpics().size());
+        System.out.println(String.format("Количество загруженных задач: %d", restoredTaskManager.getTasks().size()));
+        System.out.println(String.format("Количество загруженных подзадач: %d", restoredTaskManager.getSubtasks().size()));
+        System.out.println(String.format("Количество загруженных эпиков: %d", restoredTaskManager.getEpics().size()));
 
         Task task1 = new Task(null, "Уборка", "Сделать уборку всех комнат", Status.NEW, Duration.ofMinutes(10), LocalDateTime.of(LocalDate.now(), LocalTime.now()));
         Task task2 = new Task(null, "Написание", "Написать книгу", Status.NEW, Duration.ofMinutes(15), LocalDateTime.of(LocalDate.now(), LocalTime.now().plus(Duration.ofMinutes(15))));

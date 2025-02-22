@@ -26,9 +26,24 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         taskManager = createTaskManager();
     }
 
+    public static class TestHelper {
+
+        public static Task createTask(String name, String description, Status status, Duration duration) {
+            return new Task(null, name, description, status, duration, LocalDateTime.now());
+        }
+
+        public static Epic createEpic(String name, String description) {
+            return new Epic(null, name, description);
+        }
+
+        public static Subtask createSubtask(String name, String description, Epic epic, Status status, Duration duration) {
+            return new Subtask(null, name, description, epic.getId(), status, duration, LocalDateTime.now());
+        }
+    }
+
     @Test
     public void testCreateTask() {
-        Task task = new Task(null, "Уборка", "Помыть полы", Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
+        Task task = TestHelper.createTask("Уборка", "Помыть полы", Status.NEW, Duration.ofMinutes(30));
         Task createdTask = taskManager.createTask(task);
 
         assertNotNull(createdTask.getId());
@@ -37,7 +52,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void testUpdateTask() {
-        Task task = new Task(null, "Уборка", "Помыть полы", Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
+        Task task = TestHelper.createTask("Уборка", "Помыть полы", Status.NEW, Duration.ofMinutes(30));
         Task createdTask = taskManager.createTask(task);
 
         createdTask.setStatus(Status.IN_PROGRESS);
@@ -48,7 +63,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void testDeleteTaskById() {
-        Task task = new Task(null, "Уборка", "Помыть полы", Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
+        Task task = TestHelper.createTask("Уборка", "Помыть полы", Status.NEW, Duration.ofMinutes(30));
         Task createdTask = taskManager.createTask(task);
 
         taskManager.deleteTaskById(createdTask.getId());
@@ -57,8 +72,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void testGetAllTasks() {
-        Task task1 = new Task(null, "Уборка", "Мытье полов", Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
-        Task task2 = new Task(null, "Чтение", "Книга", Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
+        Task task1 = TestHelper.createTask("Уборка", "Помыть полы", Status.NEW, Duration.ofMinutes(30));
+        Task task2 = TestHelper.createTask("Чтение", "Книга", Status.NEW, Duration.ofMinutes(30));
 
         taskManager.createTask(task1);
         taskManager.createTask(task2);
@@ -68,8 +83,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void testDeleteAllTasks() {
-        Task task1 = new Task(null, "Уборка", "Мытье полов", Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
-        Task task2 = new Task(null, "Чтение", "Книга", Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
+        Task task1 = TestHelper.createTask("Уборка", "Помыть полы", Status.NEW, Duration.ofMinutes(30));
+        Task task2 = TestHelper.createTask("Чтение", "Книга", Status.NEW, Duration.ofMinutes(30));
 
         taskManager.createTask(task1);
         taskManager.createTask(task2);
@@ -80,7 +95,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void testFindTaskById() {
-        Task task = new Task(null, "Уборка", "Мытье полов", Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
+        Task task = TestHelper.createTask("Уборка", "Помыть полы", Status.NEW, Duration.ofMinutes(30));
         Task createdTask = taskManager.createTask(task);
 
         Task foundTask = taskManager.findTaskById(createdTask.getId());
@@ -89,7 +104,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void testCreateEpic() {
-        Epic epic = new Epic(null, "Уборка", "Дом");
+        Epic epic = TestHelper.createEpic("Уборка", "Дом");
         Epic createdEpic = taskManager.createEpic(epic);
 
         assertNotNull(createdEpic.getId());
@@ -98,7 +113,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void testUpdateEpic() {
-        Epic epic = new Epic(null, "Уборка", "Дом");
+        Epic epic = TestHelper.createEpic("Уборка", "Дом");
         Epic createdEpic = taskManager.createEpic(epic);
 
         createdEpic.setName("Генеральная уборка");
@@ -109,7 +124,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void testDeleteEpicById() {
-        Epic epic = new Epic(null, "Уборка", "Дом");
+        Epic epic = TestHelper.createEpic("Уборка", "Дом");
         Epic createdEpic = taskManager.createEpic(epic);
 
         taskManager.deleteEpicById(createdEpic.getId());
@@ -118,8 +133,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void testGetAllEpics() {
-        Epic epic1 = new Epic(null, "Уборка", "Дом");
-        Epic epic2 = new Epic(null, "Чтение", "Книга");
+        Epic epic1 = TestHelper.createEpic("Уборка", "Дом");
+        Epic epic2 = TestHelper.createEpic("Чтение", "Книга");
 
         taskManager.createEpic(epic1);
         taskManager.createEpic(epic2);
@@ -129,8 +144,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void testDeleteAllEpics() {
-        Epic epic1 = new Epic(null, "Уборка", "Дом");
-        Epic epic2 = new Epic(null, "Чтение", "Книга");
+        Epic epic1 = TestHelper.createEpic("Уборка", "Дом");
+        Epic epic2 = TestHelper.createEpic("Чтение", "Книга");
 
         taskManager.createEpic(epic1);
         taskManager.createEpic(epic2);
@@ -141,7 +156,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void testFindEpicById() {
-        Epic epic = new Epic(null, "Уборка", "Дом");
+        Epic epic = TestHelper.createEpic("Уборка", "Дом");
         Epic createdEpic = taskManager.createEpic(epic);
 
         Epic foundEpic = taskManager.findEpicById(createdEpic.getId());
@@ -150,10 +165,10 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void testCreateSubtask() {
-        Epic epic = new Epic(null, "Уборка", "Дом");
+        Epic epic = TestHelper.createEpic("Уборка", "Дом");
         Epic createdEpic = taskManager.createEpic(epic);
 
-        Subtask subtask = new Subtask(null, "Мытье", "Мытье полов", createdEpic.getId(), Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
+        Subtask subtask = TestHelper.createSubtask("Мытье", "Мытье полов", createdEpic, Status.NEW, Duration.ofMinutes(30));
         Subtask createdSubtask = taskManager.createSubtask(subtask);
 
         assertNotNull(createdSubtask, "Подзадача не была создана");
@@ -166,7 +181,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         Epic epic = new Epic(null, "Уборка", "Дом");
         Epic createdEpic = taskManager.createEpic(epic);
 
-        Subtask subtask = new Subtask(null, "Мытье", "Мытье полов", createdEpic.getId(), Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
+        Subtask subtask = TestHelper.createSubtask("Мытье", "Мытье полов", createdEpic, Status.NEW, Duration.ofMinutes(30));
         Subtask createdSubtask = taskManager.createSubtask(subtask);
 
         createdSubtask.setStatus(Status.IN_PROGRESS);
@@ -180,7 +195,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         Epic epic = new Epic(null, "Уборка", "Дом");
         Epic createdEpic = taskManager.createEpic(epic);
 
-        Subtask subtask = new Subtask(null, "Мытье", "Мытье полов", createdEpic.getId(), Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
+        Subtask subtask = TestHelper.createSubtask("Мытье", "Мытье полов", createdEpic, Status.NEW, Duration.ofMinutes(30));
         Subtask createdSubtask = taskManager.createSubtask(subtask);
 
         taskManager.deleteSubtaskById(createdSubtask.getId());
@@ -192,8 +207,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         Epic epic = new Epic(null, "Уборка", "Дом");
         Epic createdEpic = taskManager.createEpic(epic);
 
-        Subtask subtask1 = new Subtask(null, "Мытье", "Мытье полов", createdEpic.getId(), Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
-        Subtask subtask2 = new Subtask(null, "Чистка", "Чистка ковра", createdEpic.getId(), Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
+        Subtask subtask1 = TestHelper.createSubtask("Мытье", "Мытье полов", createdEpic, Status.NEW, Duration.ofMinutes(30));
+        Subtask subtask2 = TestHelper.createSubtask("Чистка", "Чистка ковра", createdEpic, Status.NEW, Duration.ofMinutes(30));
 
         taskManager.createSubtask(subtask1);
         taskManager.createSubtask(subtask2);
@@ -206,8 +221,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         Epic epic = new Epic(null, "Уборка", "Дом");
         Epic createdEpic = taskManager.createEpic(epic);
 
-        Subtask subtask1 = new Subtask(null, "Мытье", "Мытье полов", createdEpic.getId(), Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
-        Subtask subtask2 = new Subtask(null, "Чистка", "Чистка ковра", createdEpic.getId(), Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
+        Subtask subtask1 = TestHelper.createSubtask("Мытье", "Мытье полов", createdEpic, Status.NEW, Duration.ofMinutes(30));
+        Subtask subtask2 = TestHelper.createSubtask("Чистка", "Чистка ковра", createdEpic, Status.NEW, Duration.ofMinutes(30));
 
         taskManager.createSubtask(subtask1);
         taskManager.createSubtask(subtask2);
@@ -221,7 +236,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         Epic epic = new Epic(null, "Уборка", "Дом");
         Epic createdEpic = taskManager.createEpic(epic);
 
-        Subtask subtask = new Subtask(null, "Мытье", "Мытье полов", createdEpic.getId(), Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
+        Subtask subtask = TestHelper.createSubtask("Мытье", "Мытье полов", createdEpic, Status.NEW, Duration.ofMinutes(30));
         Subtask createdSubtask = taskManager.createSubtask(subtask);
 
         Subtask foundSubtask = taskManager.findSubtaskById(createdSubtask.getId());
@@ -233,9 +248,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         Epic epic = new Epic(null, "Уборка", "Дом");
         Epic createdEpic = taskManager.createEpic(epic);
 
-        Subtask subtask1 = new Subtask(null, "Мытье", "Мытье полов", createdEpic.getId(), Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
-        Subtask subtask2 = new Subtask(null, "Чистка", "Чистка ковра", createdEpic.getId(), Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
-
+        Subtask subtask1 = TestHelper.createSubtask("Мытье", "Мытье полов", createdEpic, Status.NEW, Duration.ofMinutes(30));
+        Subtask subtask2 = TestHelper.createSubtask("Чистка", "Чистка ковра", createdEpic, Status.NEW, Duration.ofMinutes(30));
         taskManager.createSubtask(subtask1);
         taskManager.createSubtask(subtask2);
 
@@ -244,7 +258,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void testGetHistory() {
-        Task task = new Task(null, "Уборка", "Дом", Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
+        Task task = TestHelper.createTask("Уборка", "Дом", Status.NEW, Duration.ofMinutes(30));
         Task createdTask = taskManager.createTask(task);
 
         taskManager.findTaskById(createdTask.getId());
@@ -253,7 +267,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void testGetPrioritizedTasks() {
-        Task task1 = new Task(null, "Мытье", "Пол", Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
+        Task task1 = TestHelper.createTask("Мытье", "Пол", Status.NEW, Duration.ofMinutes(30));
         Task task2 = new Task(null, "Читска", "Ковер", Status.NEW, Duration.ofMinutes(30), LocalDateTime.now().plusHours(1));
 
         taskManager.createTask(task1);
@@ -264,10 +278,10 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void testEpicStatusAllNew() {
-        Epic epic = new Epic(null, "Чистка", "Ковер");
+        Epic epic = TestHelper.createEpic("Чистка", "Ковер");
         Epic createdEpic = taskManager.createEpic(epic);
 
-        Subtask subtask1 = new Subtask(null, "Вынести", "Вынести на улицу", createdEpic.getId(), Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
+        Subtask subtask1 = TestHelper.createSubtask("Вынести", "Вынести на улицу", createdEpic, Status.NEW, Duration.ofMinutes(30));
         Subtask subtask2 = new Subtask(null, "Занести", "Занести домой", createdEpic.getId(), Status.NEW, Duration.ofMinutes(30), LocalDateTime.now().plusHours(1));
 
         taskManager.createSubtask(subtask1);
@@ -278,11 +292,11 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void testEpicStatusAllDone() {
-        Epic epic = new Epic(null, "Чистка", "Ковер");
+        Epic epic = TestHelper.createEpic("Чистка", "Ковер");
         Epic createdEpic = taskManager.createEpic(epic);
 
-        Subtask subtask1 = new Subtask(null, "Вынести", "Вынести на улицу", createdEpic.getId(), Status.DONE, Duration.ofMinutes(30), LocalDateTime.now());
-        Subtask subtask2 = new Subtask(null, "Занести", "Занести домой", createdEpic.getId(), Status.DONE, Duration.ofMinutes(30), LocalDateTime.now().plusHours(1));
+        Subtask subtask1 = TestHelper.createSubtask("Вынести", "Вынести на улицу", createdEpic, Status.NEW, Duration.ofMinutes(30));
+        Subtask subtask2 = new Subtask(null, "Занести", "Занести домой", createdEpic.getId(), Status.NEW, Duration.ofMinutes(30), LocalDateTime.now().plusHours(1));
 
         taskManager.createSubtask(subtask1);
         taskManager.createSubtask(subtask2);
@@ -290,26 +304,26 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(Status.DONE, createdEpic.getStatus());
     }
 
-//    @Test
-//    public void testEpicStatusNewAndDone() {
-//        Epic epic = new Epic(null, "Чистка", "Ковер");
-//        Epic createdEpic = taskManager.createEpic(epic);
-//
-//        Subtask subtask1 = new Subtask(null, "Вынести", "На улицу", createdEpic.getId(), Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
-//        Subtask subtask2 = new Subtask(null, "Занести", "Домой", createdEpic.getId(), Status.DONE, Duration.ofMinutes(30), LocalDateTime.now().plusHours(1));
-//
-//        taskManager.createSubtask(subtask1);
-//        taskManager.createSubtask(subtask2);
-//
-//        assertEquals(Status.IN_PROGRESS, createdEpic.getStatus());
-//    }
+    @Test
+    public void testEpicStatusNewAndDone() {
+        Epic epic = TestHelper.createEpic("Чистка", "Ковер");
+        Epic createdEpic = taskManager.createEpic(epic);
+
+        Subtask subtask1 = TestHelper.createSubtask("Вынести", "На улицу", createdEpic, Status.NEW, Duration.ofMinutes(30));
+        Subtask subtask2 = new Subtask(null, "Занести", "Домой", createdEpic.getId(), Status.DONE, Duration.ofMinutes(30), LocalDateTime.now().plusHours(1));
+
+        taskManager.createSubtask(subtask1);
+        taskManager.createSubtask(subtask2);
+
+        assertEquals(Status.IN_PROGRESS, createdEpic.getStatus());
+    }
 
     @Test
     public void testEpicStatusInProgress() {
-        Epic epic = new Epic(null, "Чистка", "Ковер");
+        Epic epic = TestHelper.createEpic("Чистка", "Ковер");
         Epic createdEpic = taskManager.createEpic(epic);
 
-        Subtask subtask1 = new Subtask(null, "Вынести", "На улицу", createdEpic.getId(), Status.IN_PROGRESS, Duration.ofMinutes(30), LocalDateTime.now());
+        Subtask subtask1 = TestHelper.createSubtask("Вынести", "На улицу", createdEpic, Status.IN_PROGRESS, Duration.ofMinutes(30));
         Subtask subtask2 = new Subtask(null, "Занести", "Домой", createdEpic.getId(), Status.IN_PROGRESS, Duration.ofMinutes(30), LocalDateTime.now().plusHours(1));
 
         taskManager.createSubtask(subtask1);
