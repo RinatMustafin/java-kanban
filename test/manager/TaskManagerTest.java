@@ -295,8 +295,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         Epic epic = TestHelper.createEpic("Чистка", "Ковер");
         Epic createdEpic = taskManager.createEpic(epic);
 
-        Subtask subtask1 = TestHelper.createSubtask("Вынести", "Вынести на улицу", createdEpic, Status.NEW, Duration.ofMinutes(30));
-        Subtask subtask2 = new Subtask(null, "Занести", "Занести домой", createdEpic.getId(), Status.NEW, Duration.ofMinutes(30), LocalDateTime.now().plusHours(1));
+        Subtask subtask1 = TestHelper.createSubtask("Вынести", "Вынести на улицу", createdEpic, Status.DONE, Duration.ofMinutes(30));
+        Subtask subtask2 = new Subtask(null, "Занести", "Занести домой", createdEpic.getId(), Status.DONE, Duration.ofMinutes(30), LocalDateTime.now().plusHours(1));
 
         taskManager.createSubtask(subtask1);
         taskManager.createSubtask(subtask2);
