@@ -3,9 +3,7 @@ package manager;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import tasks.Task;
-
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Set;
 
 public class PrioritizedHandler extends BaseHttpHandler {
