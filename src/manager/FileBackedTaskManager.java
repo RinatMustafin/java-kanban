@@ -2,6 +2,7 @@ package manager;
 
 import app.exception.FileManagerFileInitializationException;
 import app.exception.FileManagerSaveException;
+import app.exception.InvalidTimeException;
 import tasks.*;
 
 import java.io.File;
@@ -73,7 +74,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             Epic epic = (Epic) task;
             result += epic.getId();
         }
-        result += "," + task.getDuration().toMinutes() + "," + task.getStartTime().format(formatter);
+        result += ",";
+        result += (task.getDuration() != null) ? task.getDuration().toMinutes() : "null";
+        result += ",";
+        result += (task.getStartTime() != null) ? task.getStartTime().format(formatter) : "null";
         return result;
     }
 
@@ -91,6 +95,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 String[] lines = line.split(",");
                 Task task = null;
                 TaskType taskType = TaskType.valueOf(lines[1]);
+                LocalDateTime startTime = lines[7].equals("null") ? null : LocalDateTime.parse(lines[7], formatter);
                 switch (taskType) {
                     case TASK:
                         task = new Task(
@@ -139,7 +144,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
 
     @Override
-    public Task createTask(Task task) {
+    public Task createTask(Task task) throws InvalidTimeException {
         Task createdTask = super.createTask(task);
         save();
         return createdTask;
@@ -175,16 +180,17 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public Task updateEpic(Epic epic) {
-        Task updatedEpic = super.updateEpic(epic);
+    public Epic updateEpic(Epic epic) {
+        Epic updatedEpic = super.updateEpic(epic);
         save();
         return updatedEpic;
     }
 
     @Override
-    public void deleteEpicById(Integer id) {
+    public Epic deleteEpicById(Integer id) {
         super.deleteEpicById(id);
         save();
+        return null;
     }
 
     @Override
@@ -194,7 +200,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public Subtask createSubtask(Subtask subtask) {
+    public Subtask createSubtask(Subtask subtask) throws InvalidTimeException {
         Subtask createdSubtask = super.createSubtask(subtask);
         tasks.put(subtask.getId(), subtask);
         save();
@@ -209,9 +215,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void deleteSubtaskById(Integer id) {
-        super.deleteSubtaskById(id);
+    public Subtask deleteSubtaskById(Integer id) {
+        Subtask deletedTaskById = super.deleteSubtaskById(id);
         save();
+        return deletedTaskById;
     }
 
     @Override

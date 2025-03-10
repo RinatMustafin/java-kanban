@@ -1,5 +1,6 @@
 package manager;
 
+import app.exception.InvalidTimeException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Status;
@@ -29,7 +30,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
     }
 
     @Test
-    public void testLoadFromFile() {
+    public void testLoadFromFile() throws InvalidTimeException {
         Task task = new Task(null, "Task 1", "Description", Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
         taskManager.createTask(task);
 

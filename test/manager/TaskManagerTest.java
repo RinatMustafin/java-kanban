@@ -1,6 +1,7 @@
 package manager;
 
 import app.exception.InvalidTimeException;
+import app.exception.TaskNotFoundExсeption;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
@@ -28,22 +29,22 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     public static class TestHelper {
 
-        public static Task createTask(String name, String description, Status status, Duration duration) {
-            return new Task(null, name, description, status, duration, LocalDateTime.now());
+        public static Task createTask(String name, String description, Status status, Duration duration, LocalDateTime localDateTime) {
+            return new Task(null, name, description, status, duration, localDateTime);
         }
 
         public static Epic createEpic(String name, String description) {
             return new Epic(null, name, description);
         }
 
-        public static Subtask createSubtask(String name, String description, Epic epic, Status status, Duration duration) {
-            return new Subtask(null, name, description, epic.getId(), status, duration, LocalDateTime.now());
+        public static Subtask createSubtask(String name, String description, Epic epic, Status status, Duration duration, LocalDateTime localDateTime) {
+            return new Subtask(null, name, description, epic.getId(), status, duration, localDateTime);
         }
     }
 
     @Test
-    public void testCreateTask() {
-        Task task = TestHelper.createTask("Уборка", "Помыть полы", Status.NEW, Duration.ofMinutes(30));
+    public void testCreateTask() throws InvalidTimeException {
+        Task task = TestHelper.createTask("Уборка", "Помыть полы", Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
         Task createdTask = taskManager.createTask(task);
 
         assertNotNull(createdTask.getId());
@@ -51,8 +52,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void testUpdateTask() {
-        Task task = TestHelper.createTask("Уборка", "Помыть полы", Status.NEW, Duration.ofMinutes(30));
+    public void testUpdateTask() throws InvalidTimeException {
+        Task task = TestHelper.createTask("Уборка", "Помыть полы", Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
         Task createdTask = taskManager.createTask(task);
 
         createdTask.setStatus(Status.IN_PROGRESS);
@@ -62,18 +63,18 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void testDeleteTaskById() {
-        Task task = TestHelper.createTask("Уборка", "Помыть полы", Status.NEW, Duration.ofMinutes(30));
+    public void testDeleteTaskById() throws InvalidTimeException {
+        Task task = TestHelper.createTask("Уборка", "Помыть полы", Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
         Task createdTask = taskManager.createTask(task);
 
         taskManager.deleteTaskById(createdTask.getId());
-        assertNull(taskManager.findTaskById(createdTask.getId()));
+        assertThrows(TaskNotFoundExсeption.class, () -> taskManager.findTaskById(createdTask.getId()));
     }
 
     @Test
-    public void testGetAllTasks() {
-        Task task1 = TestHelper.createTask("Уборка", "Помыть полы", Status.NEW, Duration.ofMinutes(30));
-        Task task2 = TestHelper.createTask("Чтение", "Книга", Status.NEW, Duration.ofMinutes(30));
+    public void testGetAllTasks() throws InvalidTimeException {
+        Task task1 = TestHelper.createTask("Уборка", "Помыть полы", Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
+        Task task2 = TestHelper.createTask("Чтение", "Книга", Status.NEW, Duration.ofMinutes(30), LocalDateTime.now().plus(Duration.ofMinutes(30)));
 
         taskManager.createTask(task1);
         taskManager.createTask(task2);
@@ -82,9 +83,9 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void testDeleteAllTasks() {
-        Task task1 = TestHelper.createTask("Уборка", "Помыть полы", Status.NEW, Duration.ofMinutes(30));
-        Task task2 = TestHelper.createTask("Чтение", "Книга", Status.NEW, Duration.ofMinutes(30));
+    public void testDeleteAllTasks() throws InvalidTimeException {
+        Task task1 = TestHelper.createTask("Уборка", "Помыть полы", Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
+        Task task2 = TestHelper.createTask("Чтение", "Книга", Status.NEW, Duration.ofMinutes(30), LocalDateTime.now().plus(Duration.ofMinutes(30)));
 
         taskManager.createTask(task1);
         taskManager.createTask(task2);
@@ -94,8 +95,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void testFindTaskById() {
-        Task task = TestHelper.createTask("Уборка", "Помыть полы", Status.NEW, Duration.ofMinutes(30));
+    public void testFindTaskById() throws InvalidTimeException {
+        Task task = TestHelper.createTask("Уборка", "Помыть полы", Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
         Task createdTask = taskManager.createTask(task);
 
         Task foundTask = taskManager.findTaskById(createdTask.getId());
@@ -103,7 +104,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void testCreateEpic() {
+    public void testCreateEpic() throws InvalidTimeException {
         Epic epic = TestHelper.createEpic("Уборка", "Дом");
         Epic createdEpic = taskManager.createEpic(epic);
 
@@ -112,7 +113,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void testUpdateEpic() {
+    public void testUpdateEpic() throws InvalidTimeException {
         Epic epic = TestHelper.createEpic("Уборка", "Дом");
         Epic createdEpic = taskManager.createEpic(epic);
 
@@ -123,16 +124,16 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void testDeleteEpicById() {
+    public void testDeleteEpicById() throws InvalidTimeException {
         Epic epic = TestHelper.createEpic("Уборка", "Дом");
         Epic createdEpic = taskManager.createEpic(epic);
 
         taskManager.deleteEpicById(createdEpic.getId());
-        assertNull(taskManager.findEpicById(createdEpic.getId()));
+        assertThrows(TaskNotFoundExсeption.class, () -> taskManager.findEpicById(createdEpic.getId()));
     }
 
     @Test
-    public void testGetAllEpics() {
+    public void testGetAllEpics() throws InvalidTimeException {
         Epic epic1 = TestHelper.createEpic("Уборка", "Дом");
         Epic epic2 = TestHelper.createEpic("Чтение", "Книга");
 
@@ -143,7 +144,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void testDeleteAllEpics() {
+    public void testDeleteAllEpics() throws InvalidTimeException {
         Epic epic1 = TestHelper.createEpic("Уборка", "Дом");
         Epic epic2 = TestHelper.createEpic("Чтение", "Книга");
 
@@ -155,7 +156,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void testFindEpicById() {
+    public void testFindEpicById() throws InvalidTimeException {
         Epic epic = TestHelper.createEpic("Уборка", "Дом");
         Epic createdEpic = taskManager.createEpic(epic);
 
@@ -164,11 +165,11 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void testCreateSubtask() {
+    public void testCreateSubtask() throws InvalidTimeException {
         Epic epic = TestHelper.createEpic("Уборка", "Дом");
         Epic createdEpic = taskManager.createEpic(epic);
 
-        Subtask subtask = TestHelper.createSubtask("Мытье", "Мытье полов", createdEpic, Status.NEW, Duration.ofMinutes(30));
+        Subtask subtask = TestHelper.createSubtask("Мытье", "Мытье полов", createdEpic, Status.NEW, Duration.ofMinutes(30), LocalDateTime.now().plusHours(1));
         Subtask createdSubtask = taskManager.createSubtask(subtask);
 
         assertNotNull(createdSubtask, "Подзадача не была создана");
@@ -177,11 +178,11 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void testUpdateSubtask() {
+    public void testUpdateSubtask() throws InvalidTimeException {
         Epic epic = new Epic(null, "Уборка", "Дом");
         Epic createdEpic = taskManager.createEpic(epic);
 
-        Subtask subtask = TestHelper.createSubtask("Мытье", "Мытье полов", createdEpic, Status.NEW, Duration.ofMinutes(30));
+        Subtask subtask = TestHelper.createSubtask("Мытье", "Мытье полов", createdEpic, Status.NEW, Duration.ofMinutes(30), LocalDateTime.now().plusHours(1));
         Subtask createdSubtask = taskManager.createSubtask(subtask);
 
         createdSubtask.setStatus(Status.IN_PROGRESS);
@@ -191,24 +192,24 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void testDeleteSubtaskById() {
+    public void testDeleteSubtaskById() throws InvalidTimeException {
         Epic epic = new Epic(null, "Уборка", "Дом");
         Epic createdEpic = taskManager.createEpic(epic);
 
-        Subtask subtask = TestHelper.createSubtask("Мытье", "Мытье полов", createdEpic, Status.NEW, Duration.ofMinutes(30));
+        Subtask subtask = TestHelper.createSubtask("Мытье", "Мытье полов", createdEpic, Status.NEW, Duration.ofMinutes(30), LocalDateTime.now().plusHours(1));
         Subtask createdSubtask = taskManager.createSubtask(subtask);
 
         taskManager.deleteSubtaskById(createdSubtask.getId());
-        assertNull(taskManager.findSubtaskById(createdSubtask.getId()));
+        assertThrows(TaskNotFoundExсeption.class, () -> taskManager.findSubtaskById(createdSubtask.getId()));
     }
 
     @Test
-    public void testGetAllSubtasks() {
+    public void testGetAllSubtasks() throws InvalidTimeException {
         Epic epic = new Epic(null, "Уборка", "Дом");
         Epic createdEpic = taskManager.createEpic(epic);
 
-        Subtask subtask1 = TestHelper.createSubtask("Мытье", "Мытье полов", createdEpic, Status.NEW, Duration.ofMinutes(30));
-        Subtask subtask2 = TestHelper.createSubtask("Чистка", "Чистка ковра", createdEpic, Status.NEW, Duration.ofMinutes(30));
+        Subtask subtask1 = TestHelper.createSubtask("Мытье", "Мытье полов", createdEpic, Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
+        Subtask subtask2 = TestHelper.createSubtask("Чистка", "Чистка ковра", createdEpic, Status.NEW, Duration.ofMinutes(30), LocalDateTime.now().plusHours(1));
 
         taskManager.createSubtask(subtask1);
         taskManager.createSubtask(subtask2);
@@ -217,12 +218,12 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void testDeleteAllSubtasks() {
+    public void testDeleteAllSubtasks() throws InvalidTimeException {
         Epic epic = new Epic(null, "Уборка", "Дом");
         Epic createdEpic = taskManager.createEpic(epic);
 
-        Subtask subtask1 = TestHelper.createSubtask("Мытье", "Мытье полов", createdEpic, Status.NEW, Duration.ofMinutes(30));
-        Subtask subtask2 = TestHelper.createSubtask("Чистка", "Чистка ковра", createdEpic, Status.NEW, Duration.ofMinutes(30));
+        Subtask subtask1 = TestHelper.createSubtask("Мытье", "Мытье полов", createdEpic, Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
+        Subtask subtask2 = TestHelper.createSubtask("Чистка", "Чистка ковра", createdEpic, Status.NEW, Duration.ofMinutes(30), LocalDateTime.now().plusHours(1));
 
         taskManager.createSubtask(subtask1);
         taskManager.createSubtask(subtask2);
@@ -232,11 +233,11 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void testFindSubtaskById() {
+    public void testFindSubtaskById() throws InvalidTimeException {
         Epic epic = new Epic(null, "Уборка", "Дом");
         Epic createdEpic = taskManager.createEpic(epic);
 
-        Subtask subtask = TestHelper.createSubtask("Мытье", "Мытье полов", createdEpic, Status.NEW, Duration.ofMinutes(30));
+        Subtask subtask = TestHelper.createSubtask("Мытье", "Мытье полов", createdEpic, Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
         Subtask createdSubtask = taskManager.createSubtask(subtask);
 
         Subtask foundSubtask = taskManager.findSubtaskById(createdSubtask.getId());
@@ -244,12 +245,12 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void testFindSubtaskByEpicId() {
+    public void testFindSubtaskByEpicId() throws InvalidTimeException {
         Epic epic = new Epic(null, "Уборка", "Дом");
         Epic createdEpic = taskManager.createEpic(epic);
 
-        Subtask subtask1 = TestHelper.createSubtask("Мытье", "Мытье полов", createdEpic, Status.NEW, Duration.ofMinutes(30));
-        Subtask subtask2 = TestHelper.createSubtask("Чистка", "Чистка ковра", createdEpic, Status.NEW, Duration.ofMinutes(30));
+        Subtask subtask1 = TestHelper.createSubtask("Мытье", "Мытье полов", createdEpic, Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
+        Subtask subtask2 = TestHelper.createSubtask("Чистка", "Чистка ковра", createdEpic, Status.NEW, Duration.ofMinutes(30), LocalDateTime.now().plusHours(1));
         taskManager.createSubtask(subtask1);
         taskManager.createSubtask(subtask2);
 
@@ -257,8 +258,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void testGetHistory() {
-        Task task = TestHelper.createTask("Уборка", "Дом", Status.NEW, Duration.ofMinutes(30));
+    public void testGetHistory() throws InvalidTimeException {
+        Task task = TestHelper.createTask("Уборка", "Дом", Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
         Task createdTask = taskManager.createTask(task);
 
         taskManager.findTaskById(createdTask.getId());
@@ -266,8 +267,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void testGetPrioritizedTasks() {
-        Task task1 = TestHelper.createTask("Мытье", "Пол", Status.NEW, Duration.ofMinutes(30));
+    public void testGetPrioritizedTasks() throws InvalidTimeException {
+        Task task1 = TestHelper.createTask("Мытье", "Пол", Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
         Task task2 = new Task(null, "Читска", "Ковер", Status.NEW, Duration.ofMinutes(30), LocalDateTime.now().plusHours(1));
 
         taskManager.createTask(task1);
@@ -277,11 +278,11 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void testEpicStatusAllNew() {
+    public void testEpicStatusAllNew() throws InvalidTimeException {
         Epic epic = TestHelper.createEpic("Чистка", "Ковер");
         Epic createdEpic = taskManager.createEpic(epic);
 
-        Subtask subtask1 = TestHelper.createSubtask("Вынести", "Вынести на улицу", createdEpic, Status.NEW, Duration.ofMinutes(30));
+        Subtask subtask1 = TestHelper.createSubtask("Вынести", "Вынести на улицу", createdEpic, Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
         Subtask subtask2 = new Subtask(null, "Занести", "Занести домой", createdEpic.getId(), Status.NEW, Duration.ofMinutes(30), LocalDateTime.now().plusHours(1));
 
         taskManager.createSubtask(subtask1);
@@ -291,11 +292,11 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void testEpicStatusAllDone() {
+    public void testEpicStatusAllDone() throws InvalidTimeException {
         Epic epic = TestHelper.createEpic("Чистка", "Ковер");
         Epic createdEpic = taskManager.createEpic(epic);
 
-        Subtask subtask1 = TestHelper.createSubtask("Вынести", "Вынести на улицу", createdEpic, Status.DONE, Duration.ofMinutes(30));
+        Subtask subtask1 = TestHelper.createSubtask("Вынести", "Вынести на улицу", createdEpic, Status.DONE, Duration.ofMinutes(30), LocalDateTime.now());
         Subtask subtask2 = new Subtask(null, "Занести", "Занести домой", createdEpic.getId(), Status.DONE, Duration.ofMinutes(30), LocalDateTime.now().plusHours(1));
 
         taskManager.createSubtask(subtask1);
@@ -305,11 +306,11 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void testEpicStatusNewAndDone() {
+    public void testEpicStatusNewAndDone() throws InvalidTimeException {
         Epic epic = TestHelper.createEpic("Чистка", "Ковер");
         Epic createdEpic = taskManager.createEpic(epic);
 
-        Subtask subtask1 = TestHelper.createSubtask("Вынести", "На улицу", createdEpic, Status.NEW, Duration.ofMinutes(30));
+        Subtask subtask1 = TestHelper.createSubtask("Вынести", "На улицу", createdEpic, Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
         Subtask subtask2 = new Subtask(null, "Занести", "Домой", createdEpic.getId(), Status.DONE, Duration.ofMinutes(30), LocalDateTime.now().plusHours(1));
 
         taskManager.createSubtask(subtask1);
@@ -319,11 +320,11 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void testEpicStatusInProgress() {
+    public void testEpicStatusInProgress() throws InvalidTimeException {
         Epic epic = TestHelper.createEpic("Чистка", "Ковер");
         Epic createdEpic = taskManager.createEpic(epic);
 
-        Subtask subtask1 = TestHelper.createSubtask("Вынести", "На улицу", createdEpic, Status.IN_PROGRESS, Duration.ofMinutes(30));
+        Subtask subtask1 = TestHelper.createSubtask("Вынести", "На улицу", createdEpic, Status.IN_PROGRESS, Duration.ofMinutes(30), LocalDateTime.now());
         Subtask subtask2 = new Subtask(null, "Занести", "Домой", createdEpic.getId(), Status.IN_PROGRESS, Duration.ofMinutes(30), LocalDateTime.now().plusHours(1));
 
         taskManager.createSubtask(subtask1);

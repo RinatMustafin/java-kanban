@@ -1,5 +1,6 @@
 package manager;
 
+import app.exception.InvalidTimeException;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
@@ -8,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Set;
 
 public interface TaskManager {
-    Task createTask(Task task);
+    Task createTask(Task task) throws InvalidTimeException;
 
     Task updateTask(Task task);
 
@@ -20,11 +21,11 @@ public interface TaskManager {
 
     Task findTaskById(Integer id);
 
-    Epic createEpic(Epic epic);
+    Epic createEpic(Epic epic) throws InvalidTimeException;
 
-    Task updateEpic(Epic epic);
+    Epic updateEpic(Epic epic);
 
-    void deleteEpicById(Integer id);
+    Epic deleteEpicById(Integer id);
 
     ArrayList<Epic> getAllEpics();
 
@@ -32,11 +33,11 @@ public interface TaskManager {
 
     Epic findEpicById(Integer id);
 
-    Subtask createSubtask(Subtask subtask);
+    Subtask createSubtask(Subtask subtask) throws InvalidTimeException;
 
     Subtask updateSubtask(Subtask subtask);
 
-    void deleteSubtaskById(Integer id);
+    Subtask deleteSubtaskById(Integer id);
 
     ArrayList<Subtask> getAllSubtasks();
 

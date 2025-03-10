@@ -20,8 +20,9 @@ public class Task {
         this.status = status;
         this.duration = duration;
         this.startTime = startTime;
-        this.endTime = startTime.plus(duration);
+        this.endTime = (startTime != null && duration != null) ? startTime.plus(duration) : null;
     }
+
 
     @Override
     public String toString() {
@@ -30,9 +31,9 @@ public class Task {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", status=" + status +
-                ", duration=" + duration.toMinutes() +
-                ", startTime=" + startTime.format(formatter) +
-                ", endTime=" + endTime.format(formatter) +
+                ", duration=" + (duration != null ? duration.toMinutes() : "null") +
+                ", startTime=" + (startTime != null ? startTime.format(DateTimeFormatter.ofPattern("HH:mm:ss/dd.MM.yyyy")) : "null") +
+                ", endTime=" + (endTime != null ? endTime.format(DateTimeFormatter.ofPattern("HH:mm:ss/dd.MM.yyyy")) : "null") +
                 '}';
     }
 
@@ -96,5 +97,5 @@ public class Task {
         return TaskType.TASK;
     }
 
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss/dd.MM.yyyy");
+    // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss/dd.MM.yyyy");
 }

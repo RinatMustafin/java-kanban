@@ -1,12 +1,20 @@
-import manager.FileBackedTaskManager;
-import manager.Managers;
+import adapter.DurationAdapter;
+import adapter.LocalDateTimeAdapter;
+import app.exception.InvalidTimeException;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.sun.net.httpserver.HttpServer;
+import manager.*;
 import tasks.Epic;
 import tasks.Status;
 import tasks.Subtask;
 import tasks.Task;
-import manager.TaskManager;
 
+import javax.xml.transform.Source;
 import java.io.File;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.sql.SQLOutput;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,13 +22,11 @@ import java.time.LocalTime;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, InvalidTimeException {
         File file = new File("data.csv");
         TaskManager taskManager = Managers.getFileBackedTaskManager(file);
-
         File backup = new File("backup.csv");
         FileBackedTaskManager restoredTaskManager = FileBackedTaskManager.loadFromFile(backup);
-
         System.out.println(String.format("Количество загруженных задач: %d", restoredTaskManager.getTasks().size()));
         System.out.println(String.format("Количество загруженных подзадач: %d", restoredTaskManager.getSubtasks().size()));
         System.out.println(String.format("Количество загруженных эпиков: %d", restoredTaskManager.getEpics().size()));
@@ -43,16 +49,12 @@ public class Main {
         taskManager.createEpic(epic2);
         Subtask subtask3 = new Subtask(null, "Медленный бег", "Круг 1", epic2.getId(), Status.IN_PROGRESS, Duration.ofMinutes(15), LocalDateTime.of(LocalDate.now(), LocalTime.now().plus(Duration.ofMinutes(60))));
         taskManager.createSubtask(subtask3);
+        taskManager.findTaskById(task1.getId());
+        taskManager.findSubtaskById(subtask3.getId());
+        System.out.println(taskManager.getHistory());
 
-        System.out.println(task1);
-        System.out.println(task2);
-        System.out.println(epic1);
-        System.out.println(subtask1);
-        System.out.println(subtask2);
-        System.out.println(epic2);
-        System.out.println(subtask3);
-
-
+        HttpTaskServer httpTaskServer = new HttpTaskServer(taskManager);
+        httpTaskServer.start();
     }
 
 

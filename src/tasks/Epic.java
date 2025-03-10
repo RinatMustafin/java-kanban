@@ -6,14 +6,16 @@ import java.util.ArrayList;
 
 public class Epic extends Task {
 
-    private ArrayList<Integer> subtaskIds = new ArrayList<>();
+    private ArrayList<Integer> subtaskIds;
 
     public Epic(Integer id, String name, String description) {
         super(id, name, description, Status.NEW, Duration.ofMinutes(0), LocalDateTime.now());
+        this.subtaskIds = new ArrayList<>();
     }
 
     public Epic(int id, String name, String description, Duration duration, LocalDateTime startTime) {
         super(id, name, description, Status.NEW, duration, startTime);
+        this.subtaskIds = new ArrayList<>();
     }
 
     @Override
@@ -43,7 +45,6 @@ public class Epic extends Task {
     public void deleteSubtaskId(Integer subtaskId) {
         subtaskIds.remove(subtaskId);
     }
-
 
 
 }
