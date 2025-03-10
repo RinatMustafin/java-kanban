@@ -2,7 +2,7 @@ package manager;
 
 
 import app.exception.InvalidTimeException;
-import app.exception.TaskNotFoundExсeption;
+import app.exception.TaskNotFoundException;
 import tasks.Epic;
 import tasks.Status;
 import tasks.Subtask;
@@ -83,7 +83,7 @@ public class InMemoryTaskManager implements TaskManager {
 
         if (task == null) {
             String errorMessage = String.format("Задача с id %d не найдена", id);
-            throw new TaskNotFoundExсeption(errorMessage);
+            throw new TaskNotFoundException(errorMessage);
         }
 
         if (task != null) {
@@ -160,7 +160,7 @@ public class InMemoryTaskManager implements TaskManager {
 
         if (epic == null) {
             String errorMessage = String.format("Задача с id %d не найдена", id);
-            throw new TaskNotFoundExсeption(errorMessage);
+            throw new TaskNotFoundException(errorMessage);
         }
 
         if (epic != null) {
@@ -193,7 +193,7 @@ public class InMemoryTaskManager implements TaskManager {
             }
         } else {
             String errorMessage = String.format("Задача с id %d не найдена", epicId);
-            throw new TaskNotFoundExсeption(errorMessage);
+            throw new TaskNotFoundException(errorMessage);
         }
         return subtask;
     }
@@ -281,7 +281,7 @@ public class InMemoryTaskManager implements TaskManager {
         Subtask subtask = subtasks.get(id);
         if (subtask == null) {
             String errorMessage = String.format("Задача с id %d не найдена", id);
-            throw new TaskNotFoundExсeption(errorMessage);
+            throw new TaskNotFoundException(errorMessage);
         }
 
         if (subtask != null) {

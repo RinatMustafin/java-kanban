@@ -1,7 +1,7 @@
 package manager;
 
 import app.exception.InvalidTimeException;
-import app.exception.TaskNotFoundExсeption;
+import app.exception.TaskNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
@@ -12,7 +12,6 @@ import tasks.Task;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -68,7 +67,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         Task createdTask = taskManager.createTask(task);
 
         taskManager.deleteTaskById(createdTask.getId());
-        assertThrows(TaskNotFoundExсeption.class, () -> taskManager.findTaskById(createdTask.getId()));
+        assertThrows(TaskNotFoundException.class, () -> taskManager.findTaskById(createdTask.getId()));
     }
 
     @Test
@@ -129,7 +128,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         Epic createdEpic = taskManager.createEpic(epic);
 
         taskManager.deleteEpicById(createdEpic.getId());
-        assertThrows(TaskNotFoundExсeption.class, () -> taskManager.findEpicById(createdEpic.getId()));
+        assertThrows(TaskNotFoundException.class, () -> taskManager.findEpicById(createdEpic.getId()));
     }
 
     @Test
@@ -200,7 +199,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         Subtask createdSubtask = taskManager.createSubtask(subtask);
 
         taskManager.deleteSubtaskById(createdSubtask.getId());
-        assertThrows(TaskNotFoundExсeption.class, () -> taskManager.findSubtaskById(createdSubtask.getId()));
+        assertThrows(TaskNotFoundException.class, () -> taskManager.findSubtaskById(createdSubtask.getId()));
     }
 
     @Test

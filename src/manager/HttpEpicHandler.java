@@ -2,7 +2,7 @@ package manager;
 
 import app.exception.ErrorResponse;
 import app.exception.InvalidTimeException;
-import app.exception.TaskNotFoundExсeption;
+import app.exception.TaskNotFoundException;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import tasks.Epic;
@@ -42,7 +42,7 @@ public class HttpEpicHandler extends BaseHttpHandler {
                     String jsonText = jsonMapper.toJson(errorResponse);
                     sendText(exchange, jsonText, errorResponse.getErrorCode());
             }
-        } catch (TaskNotFoundExсeption e) {
+        } catch (TaskNotFoundException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage(), 404, exchange.getRequestURI().getPath());
             String jsonText = jsonMapper.toJson(errorResponse);
             sendText(exchange, jsonText, errorResponse.getErrorCode());
