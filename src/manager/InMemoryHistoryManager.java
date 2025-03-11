@@ -63,6 +63,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         } else {
             tail.next = newNode;
         }
+        history.put(task.getId(), newNode);
     }
 
     private void removeNode(Node node) {
